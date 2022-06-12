@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,13 +36,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var fetchDataLib = require("./fetchData");
-var fs = require("fs");
+var fetchDataLib = require('./fetchData');
+var fs = require('fs');
 var htmlParser_1 = require("./htmlParser");
 var emailSender_1 = require("./emailSender");
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         var oldProjectsFromDB, emailer, Currentday, Yesterday, dayChanged, _loop_1;
+        var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -66,7 +67,7 @@ function main() {
                                 case 1:
                                     dbResponse = _b.sent();
                                     if (dbResponse.status == 500) {
-                                        console.log("Could not read the data from database, please check the error message below:");
+                                        console.log('Could not read the data from database, please check the error message below:');
                                         console.log(dbResponse.message);
                                         return [2 /*return*/, "continue"];
                                     }
@@ -74,37 +75,56 @@ function main() {
                                     projectsNeedMaintenance = [];
                                     projectsNeedMaintenance = checkProjectsData(projectsFromDB.slice(), oldProjectsFromDB.slice());
                                     htmlRawContent = ReadContentFile();
-                                    projectsNeedMaintenance.map(function (item) {
-                                        var Subject = "";
-                                        switch (item.issue) {
-                                            case "temperature_limit":
-                                                Subject = "Temperature limit reached";
-                                                break;
-                                            case "temperature_spike":
-                                                Subject = "Detection of temperature spike";
-                                                break;
-                                            case "limit":
-                                                Subject = "Adapter has reached contacts limit";
-                                                break;
-                                            case "warning":
-                                                Subject = "Adapter has reached contacts warning";
-                                                break;
-                                            default:
-                                                Subject =
-                                                    "If you receive this error, please contact your administrator!";
-                                                break;
-                                        }
-                                        var htmlContent = (0, htmlParser_1.parseHtmlFile)(htmlRawContent, item);
-                                        console.log("Sending email for Alert: ", item.issue, " with Project name: ", item.project.project_name, " Adapter code: ", item.project.adapter_code, " Fixture type: ", item.project.fixture_type);
-                                        if (dayChanged && (item.issue == "limit" || item.issue == "warning")) {
-                                            emailer.sendEmail(item.project.owner_email, Subject, JSON.stringify(item), htmlContent);
-                                            dayChanged = false;
-                                        }
-                                        if (item.issue == "temperature_spike" ||
-                                            item.issue == "temperature_limit") {
-                                            emailer.sendEmail(item.project.owner_email, Subject, JSON.stringify(item), htmlContent);
-                                        }
-                                    });
+                                    projectsNeedMaintenance.map(function (item) { return __awaiter(_this, void 0, void 0, function () {
+                                        var Subject, htmlContent, emailSent, emailSent;
+                                        return __generator(this, function (_a) {
+                                            switch (_a.label) {
+                                                case 0:
+                                                    Subject = '';
+                                                    switch (item.issue) {
+                                                        case 'temperature_limit':
+                                                            Subject = 'Temperature limit reached';
+                                                            break;
+                                                        case 'temperature_spike':
+                                                            Subject = 'Detection of temperature spike';
+                                                            break;
+                                                        case 'limit':
+                                                            Subject = 'Adapter has reached contacts limit';
+                                                            break;
+                                                        case 'warning':
+                                                            Subject = 'Adapter has reached contacts warning';
+                                                            break;
+                                                        default:
+                                                            Subject =
+                                                                'If you receive this error, please contact your administrator!';
+                                                            break;
+                                                    }
+                                                    htmlContent = (0, htmlParser_1.parseHtmlFile)(htmlRawContent, item);
+                                                    if (!(dayChanged && (item.issue == 'limit' || item.issue == 'warning'))) return [3 /*break*/, 2];
+                                                    console.log('Sending email for Alert: ', item.issue, ' with Project name: ', item.project.project_name, ' Adapter code: ', item.project.adapter_code, ' Fixture type: ', item.project.fixture_type);
+                                                    return [4 /*yield*/, emailer.sendEmail(item.project.owner_email, Subject, JSON.stringify(item), htmlContent)];
+                                                case 1:
+                                                    emailSent = _a.sent();
+                                                    if (emailSent) {
+                                                        console.log('\x1b[32m%s\x1b[0m', "Email sent!");
+                                                        dayChanged = false;
+                                                    }
+                                                    _a.label = 2;
+                                                case 2:
+                                                    if (!(item.issue == 'temperature_spike' ||
+                                                        item.issue == 'temperature_limit')) return [3 /*break*/, 4];
+                                                    console.log('Sending email for Alert: ', item.issue, ' with Project name: ', item.project.project_name, ' Adapter code: ', item.project.adapter_code, ' Fixture type: ', item.project.fixture_type);
+                                                    return [4 /*yield*/, emailer.sendEmail(item.project.owner_email, Subject, JSON.stringify(item), htmlContent)];
+                                                case 3:
+                                                    emailSent = _a.sent();
+                                                    if (emailSent) {
+                                                        console.log('\x1b[32m%s\x1b[0m', "Email sent!");
+                                                    }
+                                                    _a.label = 4;
+                                                case 4: return [2 /*return*/];
+                                            }
+                                        });
+                                    }); });
                                     // await sleep(1000 * 60 * 15);
                                     return [4 /*yield*/, sleep(10000)];
                                 case 2:
@@ -135,11 +155,12 @@ var sleep = function (time_ms) {
 };
 var ReadContentFile = function () {
     try {
-        return fs.readFileSync("./html/emailContent.html", "utf8");
+        return fs.readFileSync('./html/emailContent.html', 'utf8');
     }
     catch (err) {
         console.error(err);
     }
+    return '';
 };
 /*
 The following function will return a list of projects that have out of boundaries values,
@@ -153,7 +174,7 @@ var checkProjectsData = function (projects, oldProjectsFromDB) {
     projects.map(function (item) {
         if (item.temperature > 27) {
             var itemDictionary = {
-                issue: "temperature_limit",
+                issue: 'temperature_limit',
                 project: item,
             };
             projectsNeedMaintenance.push(itemDictionary);
@@ -165,10 +186,10 @@ var checkProjectsData = function (projects, oldProjectsFromDB) {
                 if (item.temperature - oldItem.temperature >= 3 ||
                     oldItem.temperature - item.temperature >= 3) {
                     var itemDictionary = {
-                        issue: "temperature_spike",
+                        issue: 'temperature_spike',
                         project: item,
                     };
-                    console.log("\x1b[31m%s\x1b[0m", "!!!!Temperature spike!!!!");
+                    console.log('\x1b[31m%s\x1b[0m', "!!!!Temperature spike!!!!");
                     projectsNeedMaintenance.push(itemDictionary);
                 }
             }
@@ -176,7 +197,7 @@ var checkProjectsData = function (projects, oldProjectsFromDB) {
         var limitAdded_SkippingWarning = false;
         if (item.contacts > item.contacts_limit) {
             var itemDictionary = {
-                issue: "limit",
+                issue: 'limit',
                 project: item,
             };
             limitAdded_SkippingWarning = true;
@@ -186,7 +207,7 @@ var checkProjectsData = function (projects, oldProjectsFromDB) {
             //only add the warning if the limit was not added
             if (item.contacts > item.warning_at) {
                 var itemDictionary = {
-                    issue: "warning",
+                    issue: 'warning',
                     project: item,
                 };
                 projectsNeedMaintenance.push(itemDictionary);

@@ -37,23 +37,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmailSender = void 0;
-var nodemailer = require("nodemailer");
+var nodemailer = require('nodemailer');
 var EmailSender = /** @class */ (function () {
     function EmailSender() {
-        this.emailTransporter = null;
-        this.emailSender = "svg_somai@yahoo.com";
-        this.Subject = "";
-        this.To = "";
-        this.EmailBodyText = "";
-        this.EmailBodyHTML = "";
+        this.emailSender = 'svg_somai@yahoo.com';
         this.emailTransporter = nodemailer.createTransport({
-            host: "smtp.mail.yahoo.com",
+            host: 'smtp.mail.yahoo.com',
             port: 465,
-            service: "yahoo",
+            service: 'yahoo',
             secure: false,
             auth: {
                 user: this.emailSender,
-                pass: "tegprhqvxrwrnqts",
+                pass: 'tegprhqvxrwrnqts',
             },
             debug: false,
             logger: true,
@@ -61,25 +56,29 @@ var EmailSender = /** @class */ (function () {
     }
     EmailSender.prototype.sendEmail = function (toParam, subjectParam, textParam, htmlParam) {
         return __awaiter(this, void 0, void 0, function () {
+            var EmailBodyText, validEmails;
             return __generator(this, function (_a) {
-                this.To = toParam;
-                this.Subject = subjectParam;
-                this.EmailBodyText =
-                    "In case you view this message you must enable HTML in your emailing software.\nThe following adapter needs your attention, please schedule a maintenance for it ASAP!\n" +
-                        textParam;
-                this.EmailBodyHTML = htmlParam;
-                if (!isEmailValid(this.To)) {
-                    console.log("\x1b[31m%s\x1b[0m", "Error: Target email is invalid");
-                    return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        EmailBodyText = 'In case you view this message you must enable HTML in your emailing software.\nThe following adapter needs your attention, please schedule a maintenance for it ASAP!\n' +
+                            textParam;
+                        validEmails = parseEmailField(toParam);
+                        console.log(validEmails);
+                        if (validEmails == '') {
+                            console.log('Email is not valid');
+                            return [2 /*return*/, false];
+                        }
+                        return [4 /*yield*/, this.emailTransporter.sendMail({
+                                from: this.emailSender,
+                                to: validEmails,
+                                subject: subjectParam,
+                                text: EmailBodyText,
+                                html: htmlParam,
+                            })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, true];
                 }
-                this.emailTransporter.sendMail({
-                    from: this.emailSender,
-                    to: "somaivlad@gmail.com",
-                    subject: this.Subject,
-                    text: this.EmailBodyText,
-                    html: this.EmailBodyHTML,
-                });
-                return [2 /*return*/];
             });
         });
     };
@@ -89,5 +88,33 @@ exports.EmailSender = EmailSender;
 function isEmailValid(input) {
     var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     return input.match(validRegex) ? true : false;
+}
+function parseEmailField(input) {
+    var emails;
+    if (!input.includes(';')) {
+        if (isEmailValid(input)) {
+            return input;
+        }
+        else {
+            console.log('\x1b[31m%s\x1b[0m', "Error: Target email is invalid: ".concat(input));
+            return '';
+        }
+    }
+    else {
+        emails = input.split(';');
+        var validEmails = emails.map(function (item) {
+            if (isEmailValid(item)) {
+                console.log('\x1b[32m%s\x1b[0m', "".concat(item, " is valid email"));
+                return item;
+            }
+            else {
+                console.log('\x1b[31m%s\x1b[0m', "Error: Target email is invalid: ".concat(item));
+                return null;
+            }
+        });
+        //filter all array to remove null objects and return the valid emails delimited by ;
+        var validEmailsFiltered = validEmails.filter(function (n) { return n; });
+        return validEmailsFiltered.join(';');
+    }
 }
 //# sourceMappingURL=emailSender.js.map
