@@ -49,7 +49,7 @@ function main() {
                     oldProjectsFromDB = [];
                     emailer = new emailSender_1.EmailSender();
                     Currentday = new Date().getDate();
-                    Yesterday = new Date().getDate();
+                    Yesterday = 0;
                     dayChanged = true;
                     _loop_1 = function () {
                         var dbResponse, projectsFromDB, projectsNeedMaintenance, htmlRawContent;
