@@ -1,7 +1,7 @@
 const queryDB = (sqlCommand) => {
   const mysql = require("mysql");
 
-  process.env.DB_HOST = "127.0.0.1";
+  process.env.DB_HOST = "35.198.72.42";
   process.env.DB_USER = "root";
   process.env.DB_PASSWORD = "3ng1n33r";
   process.env.DB_NAME = "counterdb";

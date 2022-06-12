@@ -10,7 +10,7 @@ async function main() {
   let oldProjectsFromDB: Project[] = [];
   const emailer: EmailSender = new EmailSender();
   let Currentday = new Date().getDate();
-  let Yesterday = new Date().getDate();
+  let Yesterday = 0;
   let dayChanged: boolean = true;
 
   while (true) {
