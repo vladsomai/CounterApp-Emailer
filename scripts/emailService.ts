@@ -14,9 +14,13 @@ async function main() {
   let dayChanged: boolean = true
 
   while (true) {
+    console.log(new Date(), "Fetching new data...");
+    
+    
     //only send the limit and warning emails once a day
     Currentday = new Date().getDate()
     if (Yesterday != Currentday) {
+      console.log(new Date(), "Day changed...Sending email if limit is reached.");
       dayChanged = true
       Yesterday = Currentday
     }
@@ -116,8 +120,8 @@ async function main() {
       }
     })
 
-    // await sleep(1000 * 60 * 15);
-    await sleep(10000)
+    await sleep(1000 * 60 * 15);
+    // await sleep(10000)
     oldProjectsFromDB = projectsFromDB.slice()
   }
 }

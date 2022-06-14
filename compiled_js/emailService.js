@@ -57,9 +57,11 @@ function main() {
                         return __generator(this, function (_b) {
                             switch (_b.label) {
                                 case 0:
+                                    console.log(new Date(), "Fetching new data...");
                                     //only send the limit and warning emails once a day
                                     Currentday = new Date().getDate();
                                     if (Yesterday != Currentday) {
+                                        console.log(new Date(), "Day changed...Sending email if limit is reached.");
                                         dayChanged = true;
                                         Yesterday = Currentday;
                                     }
@@ -125,11 +127,10 @@ function main() {
                                             }
                                         });
                                     }); });
-                                    // await sleep(1000 * 60 * 15);
-                                    return [4 /*yield*/, sleep(10000)];
+                                    return [4 /*yield*/, sleep(1000 * 60 * 15)];
                                 case 2:
-                                    // await sleep(1000 * 60 * 15);
                                     _b.sent();
+                                    // await sleep(10000)
                                     oldProjectsFromDB = projectsFromDB.slice();
                                     return [2 /*return*/];
                             }
