@@ -63,9 +63,7 @@ var EmailSender = /** @class */ (function () {
                         EmailBodyText = 'In case you view this message you must enable HTML in your emailing software.\nThe following adapter needs your attention, please schedule a maintenance for it ASAP!\n' +
                             textParam;
                         validEmails = parseEmailField(toParam);
-                        console.log(validEmails);
                         if (validEmails == '') {
-                            console.log('Email is not valid');
                             return [2 /*return*/, false];
                         }
                         return [4 /*yield*/, this.emailTransporter.sendMail({
@@ -96,7 +94,7 @@ function parseEmailField(input) {
             return input;
         }
         else {
-            console.log('\x1b[31m%s\x1b[0m', "Error: Target email is invalid: ".concat(input));
+            console.log(new Date(), "Error: Target email is invalid: ".concat(input));
             return '';
         }
     }
@@ -104,11 +102,11 @@ function parseEmailField(input) {
         emails = input.split(';');
         var validEmails = emails.map(function (item) {
             if (isEmailValid(item)) {
-                console.log('\x1b[32m%s\x1b[0m', "".concat(item, " is valid email"));
+                console.log("".concat(item, " is valid email"));
                 return item;
             }
             else {
-                console.log('\x1b[31m%s\x1b[0m', "Error: Target email is invalid: ".concat(item));
+                console.log(new Date(), "Error: Target email is invalid: ".concat(item));
                 return null;
             }
         });

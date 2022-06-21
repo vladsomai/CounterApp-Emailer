@@ -27,10 +27,10 @@ async function main() {
 
     const dbResponse = await fetchDataLib.fetchData()
     if (dbResponse.status == 500) {
-      console.log(
+      console.log(new Date(),
         'Could not read the data from database, please check the error message below:',
       )
-      console.log(dbResponse.message)
+      console.log(new Date(), dbResponse.message)
       continue
     }
 
@@ -68,7 +68,7 @@ async function main() {
       const htmlContent = parseHtmlFile(htmlRawContent, item)
 
       if (dayChanged && (item.issue == 'limit' || item.issue == 'warning')) {
-        console.log(
+        console.log(new Date(),
           'Sending email for Alert: ',
           item.issue,
           ' with Project name: ',
@@ -87,7 +87,7 @@ async function main() {
         )
 
         if (emailSent) {
-          console.log('\x1b[32m%s\x1b[0m', `Email sent!`)
+          console.log(new Date(), `Email sent!`)
           dayChanged = false
         }
       }
@@ -96,7 +96,7 @@ async function main() {
         item.issue == 'temperature_spike' ||
         item.issue == 'temperature_limit'
       ) {
-        console.log(
+        console.log(new Date(),
           'Sending email for Alert: ',
           item.issue,
           ' with Project name: ',
@@ -115,13 +115,13 @@ async function main() {
         )
 
         if (emailSent) {
-          console.log('\x1b[32m%s\x1b[0m', `Email sent!`)
+          console.log(new Date(), `Email sent!`)
         }
       }
     })
 
-    await sleep(1000 * 60 * 15);
-    // await sleep(10000)
+    //await sleep(1000 * 60 * 15);
+     await sleep(10000)
     oldProjectsFromDB = projectsFromDB.slice()
   }
 }
@@ -178,7 +178,7 @@ const checkProjectsData = (
             issue: 'temperature_spike',
             project: item,
           }
-          console.log('\x1b[31m%s\x1b[0m', `!!!!Temperature spike!!!!`)
+          console.log(new Date(), `!!!!Temperature spike!!!!`)
           projectsNeedMaintenance.push(itemDictionary)
         }
       }

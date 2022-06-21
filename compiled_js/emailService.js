@@ -69,8 +69,8 @@ function main() {
                                 case 1:
                                     dbResponse = _b.sent();
                                     if (dbResponse.status == 500) {
-                                        console.log('Could not read the data from database, please check the error message below:');
-                                        console.log(dbResponse.message);
+                                        console.log(new Date(), 'Could not read the data from database, please check the error message below:');
+                                        console.log(new Date(), dbResponse.message);
                                         return [2 /*return*/, "continue"];
                                     }
                                     projectsFromDB = dbResponse.message;
@@ -103,34 +103,35 @@ function main() {
                                                     }
                                                     htmlContent = (0, htmlParser_1.parseHtmlFile)(htmlRawContent, item);
                                                     if (!(dayChanged && (item.issue == 'limit' || item.issue == 'warning'))) return [3 /*break*/, 2];
-                                                    console.log('Sending email for Alert: ', item.issue, ' with Project name: ', item.project.project_name, ' Adapter code: ', item.project.adapter_code, ' Fixture type: ', item.project.fixture_type);
+                                                    console.log(new Date(), 'Sending email for Alert: ', item.issue, ' with Project name: ', item.project.project_name, ' Adapter code: ', item.project.adapter_code, ' Fixture type: ', item.project.fixture_type);
                                                     return [4 /*yield*/, emailer.sendEmail(item.project.owner_email, Subject, JSON.stringify(item), htmlContent)];
                                                 case 1:
                                                     emailSent = _a.sent();
                                                     if (emailSent) {
-                                                        console.log('\x1b[32m%s\x1b[0m', "Email sent!");
+                                                        console.log(new Date(), "Email sent!");
                                                         dayChanged = false;
                                                     }
                                                     _a.label = 2;
                                                 case 2:
                                                     if (!(item.issue == 'temperature_spike' ||
                                                         item.issue == 'temperature_limit')) return [3 /*break*/, 4];
-                                                    console.log('Sending email for Alert: ', item.issue, ' with Project name: ', item.project.project_name, ' Adapter code: ', item.project.adapter_code, ' Fixture type: ', item.project.fixture_type);
+                                                    console.log(new Date(), 'Sending email for Alert: ', item.issue, ' with Project name: ', item.project.project_name, ' Adapter code: ', item.project.adapter_code, ' Fixture type: ', item.project.fixture_type);
                                                     return [4 /*yield*/, emailer.sendEmail(item.project.owner_email, Subject, JSON.stringify(item), htmlContent)];
                                                 case 3:
                                                     emailSent = _a.sent();
                                                     if (emailSent) {
-                                                        console.log('\x1b[32m%s\x1b[0m', "Email sent!");
+                                                        console.log(new Date(), "Email sent!");
                                                     }
                                                     _a.label = 4;
                                                 case 4: return [2 /*return*/];
                                             }
                                         });
                                     }); });
-                                    return [4 /*yield*/, sleep(1000 * 60 * 15)];
+                                    //await sleep(1000 * 60 * 15);
+                                    return [4 /*yield*/, sleep(10000)];
                                 case 2:
+                                    //await sleep(1000 * 60 * 15);
                                     _b.sent();
-                                    // await sleep(10000)
                                     oldProjectsFromDB = projectsFromDB.slice();
                                     return [2 /*return*/];
                             }
@@ -190,7 +191,7 @@ var checkProjectsData = function (projects, oldProjectsFromDB) {
                         issue: 'temperature_spike',
                         project: item,
                     };
-                    console.log('\x1b[31m%s\x1b[0m', "!!!!Temperature spike!!!!");
+                    console.log(new Date(), "!!!!Temperature spike!!!!");
                     projectsNeedMaintenance.push(itemDictionary);
                 }
             }

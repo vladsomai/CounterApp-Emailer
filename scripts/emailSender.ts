@@ -35,9 +35,7 @@ export class EmailSender {
     // }
 
     const validEmails = parseEmailField(toParam)
-    console.log(validEmails)
     if (validEmails == '') {
-      console.log('Email is not valid')
       return false
     }
 
@@ -64,8 +62,7 @@ function parseEmailField(input: string): string {
     if (isEmailValid(input)) {
       return input
     } else {
-      console.log(
-        '\x1b[31m%s\x1b[0m',
+      console.log(new Date(),
         `Error: Target email is invalid: ${input}`,
       )
       return ''
@@ -74,11 +71,10 @@ function parseEmailField(input: string): string {
     emails = input.split(';')
     let validEmails = emails.map((item) => {
       if (isEmailValid(item)) {
-        console.log('\x1b[32m%s\x1b[0m', `${item} is valid email`)
+        console.log(`${item} is valid email`)
         return item
       } else {
-        console.log(
-          '\x1b[31m%s\x1b[0m',
+        console.log(new Date(),
           `Error: Target email is invalid: ${item}`,
         )
         return null
